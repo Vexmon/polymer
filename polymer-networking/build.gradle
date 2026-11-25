@@ -1,5 +1,5 @@
 archivesBaseName = "polymer-networking"
-version = rootProject.mod_version + "+" + rootProject.minecraft_version
+version = rootProject.mod_version + "+" + rootProject.minecraft_version + ".vexmon.1"
 group = rootProject.maven_group
 
 loom {

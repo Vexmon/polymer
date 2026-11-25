@@ -12,7 +12,7 @@ targetCompatibility = JavaVersion.VERSION_21
 var isStable = project.is_stable == "true"
 
 archivesBaseName = "polymer-bundled"
-version = project.mod_version + "+" + project.minecraft_version
+version = project.mod_version + "+" + project.minecraft_version + ".vexmon.1"
 group = project.maven_group
 
 var field = com.google.gson.Gson.class.getDeclaredField("prettyPrinting");

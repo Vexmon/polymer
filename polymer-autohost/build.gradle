@@ -1,5 +1,5 @@
 archivesBaseName = "polymer-autohost"
-version = rootProject.mod_version + "+" + rootProject.minecraft_version
+version = rootProject.mod_version + "+" + rootProject.minecraft_version + ".vexmon.1"
 
 
 sourceSets {

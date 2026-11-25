@@ -16,11 +16,14 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class StandaloneWebServerProvider extends AbstractProvider  {
     private Config config;
     private HttpServer server;
+    private ExecutorService executor;
     public String baseAddress = "";
     public String fullAddress = "";
 
@@ -31,7 +34,13 @@ public class StandaloneWebServerProvider extends AbstractProvider  {
             server = HttpServer.create(address, 0);
 
             server.createContext("/", this::handle);
-            server.setExecutor(Executors.newFixedThreadPool(2));
+            var threadId = new AtomicInteger();
+            executor = Executors.newFixedThreadPool(2, task -> {
+                var thread = new Thread(task, "Polymer-AutoHost-HTTP-" + threadId.incrementAndGet());
+                thread.setDaemon(true);
+                return thread;
+            });
+            server.setExecutor(executor);
             server.start();
 
             this.baseAddress = config.externalAddress;
@@ -49,6 +58,11 @@ public class StandaloneWebServerProvider extends AbstractProvider  {
     public void serverStopped(MinecraftServer minecraftServer) {
         if (server != null) {
             server.stop(0);
+            server = null;
+        }
+        if (executor != null) {
+            executor.shutdownNow();
+            executor = null;
         }
     }
 
